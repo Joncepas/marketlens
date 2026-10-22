@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101827"><meta name="description" content="Analista bursátil personal: valoración explicable y seguimiento de oportunidades.">
+<link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
+<title>MarketLens — Analista bursátil</title>
+</head>
+<body>
+<header class="topbar"><div class="brand"><div class="logo">M</div><div><strong>MarketLens</strong><small>Tu analista de mercados</small></div></div><button id="installBtn" class="secondary hidden">Instalar app</button></header>
+<main>
+<section class="hero">
+  <div><p class="eyebrow">INVESTIGACIÓN · VALORACIÓN · RIESGO</p><h1>Busca valor.<br><span>Entiende el riesgo.</span></h1><p class="muted">Una herramienta de análisis, no una máquina de predicciones. Cada valoración muestra sus supuestos.</p></div>
+  <div class="market-note"><span class="pulse"></span><div><strong>Modo de datos</strong><p id="dataMode">Datos introducidos por ti / ejemplos ilustrativos</p></div></div>
+</section>
+<nav class="tabs" aria-label="Secciones"><button class="tab active" data-tab="dashboard">Resumen</button><button class="tab" data-tab="scanner">Escáner</button><button class="tab" data-tab="watchlist">Seguimiento</button><button class="tab" data-tab="sources">Fuentes y método</button></nav>
+<section id="dashboard" class="view active">
+  <div class="section-head"><div><p class="eyebrow">PANEL PERSONAL</p><h2>Tu mercado, de un vistazo</h2></div><button id="addAssetTop" class="primary">+ Analizar activo</button></div>
+  <div class="metric-grid"><article class="metric"><span>Activos seguidos</span><strong id="countMetric">0</strong><small>En tu lista personal</small></article><article class="metric"><span>Con margen de seguridad</span><strong id="marginMetric">0</strong><small>Según tus supuestos</small></article><article class="metric"><span>Datos de mercado</span><strong>Manual</strong><small>No hay cotizaciones en directo</small></article></div>
+  <div class="panel"><div class="panel-head"><div><h3>Oportunidades en seguimiento</h3><p>Ordenadas por margen de seguridad estimado</p></div><button class="text-btn" data-goto="watchlist">Ver todas →</button></div><div id="dashboardList" class="asset-list empty-state">Aún no hay activos. Añade una empresa, ETF, sector o cripto y registra datos verificables.</div></div>
+  <div class="notice"><strong>Importante</strong><p>Los resultados dependen de los datos y supuestos que introduzcas. Un activo que parezca barato puede ser una trampa de valor, y un modelo no predice el precio futuro.</p></div>
+</section>
+<section id="scanner" class="view">
+ <div class="section-head"><div><p class="eyebrow">SCANNER</p><h2>Evaluar una oportunidad</h2><p class="muted">Introduce datos de una fuente fiable. Los campos se guardan localmente en este dispositivo.</p></div></div>
+ <form id="assetForm" class="panel form-grid">
+  <label>Nombre / ticker<input id="name" required placeholder="Ej. Microsoft / MSFT"></label>
+  <label>Tipo<select id="type"><option>Acción</option><option>ETF</option><option>Sector</option><option>Criptomoneda</option></select></label>
+  <label>Mercado / bolsa<input id="exchange" placeholder="Ej. Nasdaq, Xetra, Binance"></label>
+  <label>Precio actual por unidad<input id="price" required type="number" min="0.000001" step="any" placeholder="100"></label>
+  <label>Moneda<input id="currency" value="USD" maxlength="5"></label>
+  <label>Valor razonable estimado por unidad<input id="fairValue" type="number" min="0" step="any" placeholder="120"></label>
+  <label>Ingresos / flujo de caja libre anual (opcional)<input id="fcf" type="number" step="any" placeholder="En moneda de reporte"></label>
+  <label>Crecimiento anual esperado (%)<input id="growth" type="number" step="any" value="5"></label>
+  <label>Tasa de descuento / rentabilidad exigida (%)<input id="discount" type="number" step="any" value="9"></label>
+  <label>Deuda / riesgo financiero (0–5)<input id="debtRisk" type="number" min="0" max="5" step="1" value="2"></label>
+  <label>Ventaja competitiva (0–5)<input id="moat" type="number" min="0" max="5" step="1" value="3"></label>
+  <label>Calidad / consistencia del negocio (0–5)<input id="quality" type="number" min="0" max="5" step="1" value="3"></label>
+  <label class="full">Fuente y fecha de los datos<input id="source" placeholder="Ej. informe anual FY2025, URL, consultado 22/10/2026"></label>
+  <label class="full">Tesis de inversión y principales riesgos<textarea id="thesis" rows="3" placeholder="¿Por qué podría estar infravalorada? ¿Qué podría invalidar la tesis?"></textarea></label>
+  <div class="full form-actions"><button class="primary" type="submit">Calcular y guardar análisis</button><button class="secondary" type="reset">Limpiar formulario</button></div>
+ </form>
+ <div id="valuationResult" class="panel result hidden"></div>
+ <div class="notice"><strong>Cómo se calcula</strong><p>Margen de seguridad = (valor razonable − precio) / valor razonable. El indicador de calidad es una heurística transparente, no una recomendación ni una predicción. El valor razonable lo introduces tú; esta versión no lo obtiene automáticamente.</p></div>
+</section>
+<section id="watchlist" class="view">
+ <div class="section-head"><div><p class="eyebrow">TU UNIVERSO</p><h2>Lista de seguimiento</h2><p class="muted">Todos los análisis almacenados en este navegador.</p></div><button id="exportBtn" class="secondary">Exportar JSON</button></div>
+ <div id="watchlistList" class="asset-list empty-state">Todavía no has guardado ningún análisis.</div>
+</section>
+<section id="sources" class="view">
+ <div class="section-head"><div><p class="eyebrow">TRANSPARENCIA</p><h2>Fuentes, límites y metodología</h2></div></div>
+ <div class="source-grid">
+  <article class="panel"><h3>Fuentes de datos verificables</h3><p>Utiliza documentos originales y registra siempre la URL, fecha, moneda y periodo fiscal. La app no descarga ni valida automáticamente los datos en esta versión.</p><ul><li><a href="https://www.sec.gov/edgar/search/" target="_blank" rel="noreferrer">SEC EDGAR — informes de empresas de EE. UU.</a></li><li><a href="https://www.annualreports.com/" target="_blank" rel="noreferrer">AnnualReports — informes anuales</a></li><li><a href="https://www.ishares.com/" target="_blank" rel="noreferrer">iShares — fichas y documentación de ETF</a></li><li><a href="https://www.justetf.com/" target="_blank" rel="noreferrer">justETF — información de ETF europeos</a></li><li><a href="https://www.coingecko.com/" target="_blank" rel="noreferrer">CoinGecko — información de criptoactivos</a></li><li><a href="https://www.stlouisfed.org/" target="_blank" rel="noreferrer">FRED — datos macroeconómicos</a></li></ul></article>
+  <article class="panel"><h3>Marco de valoración</h3><ul><li><b>Margen de seguridad:</b> diferencia entre valor estimado y precio, relativa al valor estimado.</li><li><b>DCF:</b> valorar flujos de caja futuros descontados por el riesgo y el valor temporal del dinero.</li><li><b>Comparables:</b> PER, EV/EBITDA, precio/ventas y métricas específicas por sector.</li><li><b>ETF:</b> analizar comisiones, índice, concentración, tracking difference y liquidez.</li><li><b>Cripto:</b> muchas monedas no generan flujos de caja; el DCF puede no ser aplicable.</li></ul></article>
+  <article class="panel"><h3>Limitaciones de esta versión</h3><ul><li>Sin cotizaciones en directo ni sincronización automática.</li><li>Sin recomendaciones de compra/venta.</li><li>El valor razonable es una entrada manual; no se calcula un DCF completo.</li><li>La puntuación es orientativa y no comparable entre todos los tipos de activo.</li><li>Los datos se guardan en el navegador; borrar sus datos puede eliminarlos.</li></ul></article>
+  <article class="panel"><h3>Próximas mejoras</h3><ol><li>Conectar fuentes con API gratuita y mostrar hora de actualización.</li><li>Modelo DCF con escenarios pesimista, base y optimista.</li><li>Comparación con empresas del mismo sector.</li><li>Escáner diario automatizado y alertas.</li><li>Sincronización cifrada entre dispositivos, si se necesita.</li></ol></article>
+ </div>
+</section>
+<footer><span>MarketLens · Prototipo personal</span><span>Sin asesoramiento financiero · No garantiza resultados</span></footer>
+</main>
+<dialog id="detailDialog"><div id="detailContent"></div><button class="secondary" id="closeDialog">Cerrar</button></dialog>
+<script src="app.js"></script>
+</body></html>
